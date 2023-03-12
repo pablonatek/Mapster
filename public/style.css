@@ -1,0 +1,9 @@
+:root {
+    --highlight: #8933c2;
+    --background: #262629;
+}
+
+span{
+    color: var(--highlight);
+}
+a{color: var(--highlight);}
