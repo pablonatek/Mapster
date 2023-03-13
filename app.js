@@ -28,7 +28,7 @@ app.get('/signup',(req, res)=>{
 });
 
 app.post('/signup/',(req, res)=>{
-    //user creation
+    console.log('ricardo');
     req.login(req.body, ()=>{
         res.redirect('/profile');
     })
