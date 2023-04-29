@@ -12,36 +12,11 @@
 <body style=" color: var(--highlight);" >
     <%- include('../partials/header.html'); %>
     <section class="vh-100" style="background-color: #505257; color: var(--highlight);">
-        <div class="container py-5 h-100">
-          <div class="row d-flex justify-content-center align-items-center h-100">
-            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-              <div class="card bg-dark" style="border-radius: 1rem;">
-                <div class="card-body p-5 text-center">
-      
-                  <h3 class="mb-5">Sign in</h3>
-                  <form name="signup" action="/signup/" method="post">
-                    <div class="form-outline mb-4">
-                      <input type="email" id="typeEmailX-2" class="form-control form-control-lg bg-dark" value="pepito@gmail.com" style="color: var(--highlight); border-color:var(--highlight);"/>
-                    </div>
-                    
-                    <div class="form-outline mb-4">
-                      <input type="email" id="typeEmailX-2" class="form-control form-control-lg bg-dark" value="pepitoGrillo" style="color: var(--highlight); border-color:var(--highlight);"/>
-                    </div>
-        
-                    <div class="form-outline mb-4">
-                      <input type="password" id="typePasswordX-2" class="form-control form-control-lg bg-dark" value="Password" style="color: var(--highlight); border-color: var(--highlight);"/>
-                    </div>
-
-                    <div class="form-outline mb-4">
-                      <input type="email" id="typeEmailX-2" class="form-control form-control-lg bg-dark" value="Password" style="color: var(--highlight); border-color:var(--highlight);"/>
-                    </div>
-                    <button class="btn btn-lg btn-block" style="border-color:var(--highlight); color: var(--highlight)" type="submit">Login</button>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <form name = "signup" action="/auth/signup" method="post">
+        username: <input name = "username" id ="username"/> <br/>
+        password: <input name = "password" id ="password"/> <br/>
+        <input type="submit" class="btn btn-primary btn-lg"> Log IN </input>
+      </form>
     </section>
     <%- include('../partials/footer.html'); %>
 </body>
