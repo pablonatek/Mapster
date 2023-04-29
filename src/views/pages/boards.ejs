@@ -19,7 +19,17 @@
 </head>
 <body style=" color: var(--highlight);" >
     <%- include('../partials/header.html'); %>
-    
+    <center>
+        <% boards.forEach((row) => { %>
+            <ul>
+                <li><h4><%= row.name %></h4></li>
+                <li>Anchura:<%= row.thick %></li>
+                <li>Altura:<%= row.length %></li>
+                <li>idUsuario<%= row.userFk %></li>
+                <a href="/boards/<%= row.id %>" class="button">Consultar</a>
+            </ul>
+        <% }); %>
+    </center>
     <%- include('../partials/footer.html'); %>
 </body>
 </html>
