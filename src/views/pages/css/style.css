@@ -2,7 +2,9 @@
     --highlight: #8933c2;
     --background: #262629;
 }
-
+.body{
+    background-color: var(--background);
+}
 span{
     color: var(--highlight);
 }

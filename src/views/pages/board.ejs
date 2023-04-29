@@ -7,17 +7,33 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <title>Mapster</title>
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script>
-        $(document).ready(function(){
-            $("#signup").click(function(){
-                window.location.replace("http://localhost:3000/signup");
-            });
-        });
-    </script>
+        // Obtener la tabla y las cells
+        const board = document.getElementById('board');
+        const cells = board.getElementsByTagName('td');
+  
+        // Establecer el ancho y alto de las cells
+        for (let i = 0; i < cells.length; i++) {
+          cells[i].style.width = (100 / 10) + '%';
+          cells[i].style.height = (100 / 10) + '%';
+        }
+      </script>
+     <style>
+        /* Estilo para la tabla */
+        table {
+          border-collapse: collapse;
+        }
+  
+        td {
+          width: 40px;
+          height: 40px;
+          border: 1px solid white;
+        }
+      </style>
 </head>
-<body style=" color: var(--highlight);" >
+<body style=" color: var(--highlight); background-color: black; " >
     <%- include('../partials/header.html'); %>
     <center>
         <% board.forEach((row) => { %>
@@ -26,10 +42,17 @@
                 <li>Anchura:<%= row.thick %></li>
                 <li>Altura:<%= row.length %></li>
                 <li>idUsuario<%= row.userFk %></li>
-                <a href="/boards/<%= row.id %>" class="button">Consultar</a>
             </ul>
+            <table id="board">
+                <% for (let i = 1; i <= cells. ; i++) { %>
+                <tr>
+                    <% for (let j = 1; j <= row.length; j++) { %>
+                    <td><p style="color:aliceblue"><%= i %>,<%= j %></p></td>
+                    <% } %>
+                </tr>
+                <% } %>
+            </table>
         <% }); %>
     </center>
-    <%- include('../partials/footer.html'); %>
 </body>
 </html>

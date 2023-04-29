@@ -47,14 +47,25 @@ app.get('/boards',(req, res)=>{
 });
 
 app.get('/boards/:id', (req, res) => {
+    const cst = 
+        "SELECT c.id, c.x, c.y, c.boardFk, ct.image " +
+        "FROM cell c " +
+            "LEFT JOIN cellType ct ON ct.id = c.typeFk " +
+        "WHERE c.boardFk = ?;" 
     const id = req.params.id;
-    db.query("SELECT * FROM board WHERE id = " + id, function (err, results, fields) {
-      if (err) throw err;
-      console.log(results);
-      res.render('board', { board: results });
+    let board, cells;
+    db.query("SELECT * FROM board WHERE id = ?", [id], function (err, boardResults, fields) {
+        if (err) throw err;
+        console.log(boardResults);
+        board = boardResults;
+        db.query(cst, [id], function (err, cellsResults, fields) {
+            if (err) throw err;
+            console.log(cellsResults);
+            cells = cellsResults.map((cell) => Object.assign({}, cell));
+          });
+        res.render('board', {board, cells: cells});
     });
-  });
-  
+});
 
 app.get('/signup',(req, res)=>{
     console.log('signup');
