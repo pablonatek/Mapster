@@ -72,7 +72,7 @@ app.get('/boards/:id', (req, res) => {
             console.log(cellsResults);
             cells = cellsResults.map((cell) => Object.assign({}, cell));
             res.render('board', {board, cells: cells});
-          });
+        });
     });
 });
 

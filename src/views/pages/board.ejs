@@ -10,54 +10,71 @@
     <link rel="stylesheet" href="../css/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script>
-        // Obtener la tabla y las cells
-        const board = document.getElementById('board');
-        const cells = board.getElementsByTagName('td');
-  
-        // Establecer el ancho y alto de las cells
-        for (let i = 0; i < cells.length; i++) {
-          cells[i].style.width = (100 / 10) + '%';
-          cells[i].style.height = (100 / 10) + '%';
-        }
-      </script>
-     <style>
-        /* Estilo para la tabla */
-        table {
-          border-collapse: collapse;
-        }
-  
-        td {
-          width: 40px;
-          height: 40px;
-          border: 1px solid white;
-        }
-      </style>
+        $(document).ready(function(){
+          // Obtener la tabla y las cells
+          const board = document.getElementById('board');
+          const cells = board.getElementsByTagName('td');
+
+          // Establecer el ancho y alto de la tabla
+          const windowWidth = window.innerWidth;
+          const windowHeight = window.innerHeight;
+          board.style.width = (Math.min(windowWidth, windowHeight) * 0.8) + 'px';
+          board.style.height = (Math.min(windowWidth, windowHeight) * 0.8) + 'px';
+
+          // Establecer el ancho y alto de las cell
+        });
+    </script>
+    <style>
+      /* Estilo para la tabla */
+      table {
+        border-collapse: collapse;
+      }
+
+      td {
+        border: 1px solid white;
+      }
+    </style>
 </head>
-<body style=" color: var(--highlight); background-color: black; " >
-      <%- include('../partials/header.html'); %>
+<body>
+      <nav class="sidebar">
+        <center>
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <h4>Board Name: <%= board[0].name %></h4>
+            </li>
+            <li class="nav-item">
+              Thick: <%= board[0].thick %>
+            </li>
+            <li class="nav-item">
+              Length:<%= board[0].length %>
+            </li>
+            <li class="nav-item">
+              UserFk:<%= board[0].userFk %>
+            </li>
+            <br><br><br><br><br><br><br>
+            <hr>
+            <li>
+              Cells
+            </li>
+            <hr>
+          </ul>
+        </center>
+      </nav>
       <center>
-          <% board.forEach((row) => { %>
-              <ul>
-                  <li><h4><%= row.name %></h4></li>
-                  <li>Anchura:<%= row.thick %></li>
-                  <li>Altura:<%= row.length %></li>
-                  <li>idUsuario<%= row.userFk %></li>
-              </ul>
-              <table id="board">
-                <% for (let y = 1; y <= row.thick; y++) { %>
-                  <tr id="<%= y %>">
-                    <% for (let x = 1; x <= row.length; x++) { %>
-                      <td id="<%= x %>" 
-                        <% if(cells && cells[((x-1) * row.length + y)-1] && cells[((x-1) * row.length + y)-1].image !== null){ %>
-                          style="background-image: url(../cellsPictures/<%= cells[((x-1) * row.length + y) -1].image %>.jpg);"> 
-                        <% } else { %>
-                          >
-                        <% } %></td>
-                    <% } %>
-                  </tr>
-                <% } %>
-              </table>
-          <% }); %>
+        <table id="board">
+          <% for (let y = 1; y <= board[0].thick; y++) { %>
+            <tr id="<%= y %>">
+              <% for (let x = 1; x <= board[0].length; x++) { %>
+                <td id="<%= x %>" 
+                  <% if(cells && cells[((x-1) * board[0].length + y)-1] && cells[((x-1) * board[0].length + y)-1].image !== null){ %>
+                    style="background-image: url(../cellsPictures/<%= cells[((x-1) * board[0].length + y) -1].image %>.jpg);"> 
+                  <% } else { %>
+                    >
+                  <% } %></td>
+              <% } %>
+            </tr>
+          <% } %>
+        </table>
       </center>
 </body>
 </html>
