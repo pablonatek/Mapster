@@ -1,9 +1,32 @@
 :root {
     --highlight: #8933c2;
     --background: #262629;
+    --bodyBackground: black;
+    --sideBarBackGround:  #1e1e20;
 }
-
+body{
+    background-color: var(--bodyBackground);
+    color: var(--highlight);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
 span{
     color: var(--highlight);
 }
 a{color: var(--highlight);}
+
+.sidebar{
+    font-weight: 500;
+    color: var(--highlight);
+    background-color: var(--sideBarBackGround);
+    position: fixed;
+    left: 0;
+    width: 15%;
+    height: 100%;
+}
+
+.navbarNav{
+    position: relative;
+}

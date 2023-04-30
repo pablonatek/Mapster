@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const mysql = require('mysql');
 
+
 let db = mysql.createConnection({
     host: "localhost",
     user: "node",
@@ -21,6 +22,7 @@ const app = express();
 
 app.use(express.static(path.join(__dirname, '/src/views/pages')));
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({secret: 'mapster'}));
 
@@ -38,6 +40,10 @@ app.get('/login',(req, res)=>{
 });
 
 app.get('/boards',(req, res)=>{
+    console.log('boards');
+    if (!req.user) {
+        return res.redirect('/signin');
+    }
     const boards = db.query(
         "SELECT * FROM board", function (err, results, fields) {
         if (err) throw err;
@@ -47,31 +53,60 @@ app.get('/boards',(req, res)=>{
 });
 
 app.get('/boards/:id', (req, res) => {
+    if (!req.user) {
+        return res.redirect('/signin');
+    }
+    const cst = 
+        "SELECT c.id, c.x, c.y, c.boardFk, ct.image " +
+        "FROM cell c " +
+            "LEFT JOIN cellType ct ON ct.id = c.typeFk " +
+        "WHERE c.boardFk = ?;" 
     const id = req.params.id;
-    db.query("SELECT * FROM board WHERE id = " + id, function (err, results, fields) {
-      if (err) throw err;
-      console.log(results);
-      res.render('board', { board: results });
+    let board, cells;
+    db.query("SELECT * FROM board WHERE id = ?", [id], function (err, boardResults, fields) {
+        if (err) throw err;
+        console.log(boardResults);
+        board = boardResults;
+        db.query(cst, [id], function (err, cellsResults, fields) {
+            if (err) throw err;
+            console.log(cellsResults);
+            cells = cellsResults.map((cell) => Object.assign({}, cell));
+            res.render('board', {board, cells: cells});
+        });
     });
-  });
-  
+});
 
 app.get('/signup',(req, res)=>{
     console.log('signup');
     res.render('signup');
 });
 
-app.post('/signup',(req, res)=>{
-    console.log('postSignUp');
-    console.log(req.user);
-    res.json(req.body);
+app.post('/signup', (req, res) => {
+    // creando el usario
+    const username = req.body.username;
+    const password = req.body.password;
+    const results =  db.query("INSERT INTO user SET username = ?, password = ?", 
+        [username, password], 
+        function (err, userResults, fields){
+            if (err) throw err;
+            // log in el usuario
+            req.logIn(userResults, () => {
+                res.redirect('/boards')
+            });
+        }
+    );
 });
 
-app.get('/signup/profile',(req, res)=>{
-    console.log('/signup/profile');
-    console.log(req.user);
+app.get('/signin', (req, res) => {
+    console.log('signin');
+    res.render('signin');
 });
+  
+app.post('/signin', passport.authenticate('local', {
+    successRedirect: '/boards',
+    failureRedirect: '/signin',
+}));
 
 app.listen(3000, ()=>{
-    console.log('Mapster Start');
+    console.log('!Mapster Start!');
 });
