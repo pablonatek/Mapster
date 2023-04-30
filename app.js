@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const mysql = require('mysql');
 
+
 let db = mysql.createConnection({
     host: "localhost",
     user: "node",
@@ -21,6 +22,7 @@ const app = express();
 
 app.use(express.static(path.join(__dirname, '/src/views/pages')));
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({secret: 'mapster'}));
 
@@ -62,8 +64,8 @@ app.get('/boards/:id', (req, res) => {
             if (err) throw err;
             console.log(cellsResults);
             cells = cellsResults.map((cell) => Object.assign({}, cell));
+            res.render('board', {board, cells: cells});
           });
-        res.render('board', {board, cells: cells});
     });
 });
 
@@ -72,17 +74,36 @@ app.get('/signup',(req, res)=>{
     res.render('signup');
 });
 
-app.post('/signup',(req, res)=>{
-    console.log('postSignUp');
-    console.log(req.user);
-    res.json(req.body);
+app.post('/signup', (req, res) => {
+    // creando el usario
+    const username = req.body.username;
+    const password = req.body.password;
+    const results =  db.query("INSERT INTO user SET username = ?, password = ?", 
+        [username, password], 
+        function (err, userResults, fields){
+            if (err) throw err;
+            // log in el usuario
+            req.logIn(userResults, () => {
+                res.redirect('/auth/profile')
+            });
+        }
+    );
 });
 
-app.get('/signup/profile',(req, res)=>{
-    console.log('/signup/profile');
-    console.log(req.user);
+app.get('/signin', (req, res) => {
+    console.log('signin');
+    res.render('signin');
+});
+  
+app.post('/signin', passport.authenticate('local', {
+    successRedirect: '/auth/profile',
+    failureRedirect: '/signin',
+}));
+
+app.get('/auth/profile',(req, res)=>{
+    res.json(req.user);
 });
 
 app.listen(3000, ()=>{
-    console.log('Mapster Start');
+    console.log('!Mapster Start!');
 });

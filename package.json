@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "body-parser": "^1.20.2",
     "bootstrap": "^5.2.3",
     "cookie-parser": "^1.4.6",
     "ejs": "^3.1.8",
@@ -7,6 +8,7 @@
     "express-session": "^1.17.3",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.21",
-    "passport": "^0.6.0"
+    "passport": "^0.6.0",
+    "passport-local": "^1.0.0"
   }
 }

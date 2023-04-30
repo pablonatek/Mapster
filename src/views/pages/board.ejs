@@ -48,12 +48,11 @@
                   <tr id="<%= y %>">
                     <% for (let x = 1; x <= row.length; x++) { %>
                       <td id="<%= x %>" 
-                        <% if(cells[(x-1) * row.length + y].image !== null){ %>
-                          style="background-image: url(../cellsPictures/baldosa.jpg);">
+                        <% if(cells && cells[((x-1) * row.length + y)-1] && cells[((x-1) * row.length + y)-1].image !== null){ %>
+                          style="background-image: url(../cellsPictures/<%= cells[((x-1) * row.length + y) -1].image %>.jpg);"> 
                         <% } else { %>
                           >
-                        <% } %>
-                      </td>
+                        <% } %></td>
                     <% } %>
                   </tr>
                 <% } %>
