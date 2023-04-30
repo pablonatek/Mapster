@@ -34,25 +34,31 @@
       </style>
 </head>
 <body style=" color: var(--highlight); background-color: black; " >
-    <%- include('../partials/header.html'); %>
-    <center>
-        <% board.forEach((row) => { %>
-            <ul>
-                <li><h4><%= row.name %></h4></li>
-                <li>Anchura:<%= row.thick %></li>
-                <li>Altura:<%= row.length %></li>
-                <li>idUsuario<%= row.userFk %></li>
-            </ul>
-            <table id="board">
-                <% for (let i = 1; i <= cells. ; i++) { %>
-                <tr>
-                    <% for (let j = 1; j <= row.length; j++) { %>
-                    <td><p style="color:aliceblue"><%= i %>,<%= j %></p></td>
+      <%- include('../partials/header.html'); %>
+      <center>
+          <% board.forEach((row) => { %>
+              <ul>
+                  <li><h4><%= row.name %></h4></li>
+                  <li>Anchura:<%= row.thick %></li>
+                  <li>Altura:<%= row.length %></li>
+                  <li>idUsuario<%= row.userFk %></li>
+              </ul>
+              <table id="board">
+                <% for (let y = 1; y <= row.thick; y++) { %>
+                  <tr id="<%= y %>">
+                    <% for (let x = 1; x <= row.length; x++) { %>
+                      <td id="<%= x %>" 
+                        <% if(cells[(x-1) * row.length + y].image !== null){ %>
+                          style="background-image: url(../cellsPictures/baldosa.jpg);">
+                        <% } else { %>
+                          >
+                        <% } %>
+                      </td>
                     <% } %>
-                </tr>
+                  </tr>
                 <% } %>
-            </table>
-        <% }); %>
-    </center>
+              </table>
+          <% }); %>
+      </center>
 </body>
 </html>
