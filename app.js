@@ -40,6 +40,10 @@ app.get('/login',(req, res)=>{
 });
 
 app.get('/boards',(req, res)=>{
+    console.log('boards');
+    if (!req.user) {
+        return res.redirect('/signin');
+    }
     const boards = db.query(
         "SELECT * FROM board", function (err, results, fields) {
         if (err) throw err;
@@ -49,6 +53,9 @@ app.get('/boards',(req, res)=>{
 });
 
 app.get('/boards/:id', (req, res) => {
+    if (!req.user) {
+        return res.redirect('/signin');
+    }
     const cst = 
         "SELECT c.id, c.x, c.y, c.boardFk, ct.image " +
         "FROM cell c " +
@@ -84,7 +91,7 @@ app.post('/signup', (req, res) => {
             if (err) throw err;
             // log in el usuario
             req.logIn(userResults, () => {
-                res.redirect('/auth/profile')
+                res.redirect('/boards')
             });
         }
     );
@@ -96,13 +103,9 @@ app.get('/signin', (req, res) => {
 });
   
 app.post('/signin', passport.authenticate('local', {
-    successRedirect: '/auth/profile',
+    successRedirect: '/boards',
     failureRedirect: '/signin',
 }));
-
-app.get('/auth/profile',(req, res)=>{
-    res.json(req.user);
-});
 
 app.listen(3000, ()=>{
     console.log('!Mapster Start!');
