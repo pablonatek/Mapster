@@ -1,29 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <title>Mapster</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <%- include('../partials/head.html'); %>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-    <script>
-        $(document).ready(function(){
-          // Obtener la tabla y las cells
-          const board = document.getElementById('board');
-          const cells = board.getElementsByTagName('td');
-
-          // Establecer el ancho y alto de la tabla
-          const windowWidth = window.innerWidth;
-          const windowHeight = window.innerHeight;
-          board.style.width = (Math.min(windowWidth, windowHeight) * 0.8) + 'px';
-          board.style.height = (Math.min(windowWidth, windowHeight) * 0.8) + 'px';
-
-          // Establecer el ancho y alto de las cell
-        });
-    </script>
+    <script src = "../scripts/boardScript.js"></script>
     <style>
       /* Estilo para la tabla */
       table {
@@ -36,45 +16,48 @@
     </style>
 </head>
 <body>
-      <nav class="sidebar">
-        <center>
-          <ul class="nav flex-column">
-            <li class="nav-item">
-              <h4>Board Name: <%= board[0].name %></h4>
-            </li>
-            <li class="nav-item">
-              Thick: <%= board[0].thick %>
-            </li>
-            <li class="nav-item">
-              Length:<%= board[0].length %>
-            </li>
-            <li class="nav-item">
-              UserFk:<%= board[0].userFk %>
-            </li>
-            <br><br><br><br><br><br><br>
-            <hr>
-            <li>
-              Cells
-            </li>
-            <hr>
-          </ul>
-        </center>
-      </nav>
-      <center>
-        <table id="board">
-          <% for (let y = 1; y <= board[0].thick; y++) { %>
-            <tr id="<%= y %>">
-              <% for (let x = 1; x <= board[0].length; x++) { %>
-                <td id="<%= x %>" 
-                  <% if(cells && cells[((x-1) * board[0].length + y)-1] && cells[((x-1) * board[0].length + y)-1].image !== null){ %>
-                    style="background-image: url(../cellsPictures/<%= cells[((x-1) * board[0].length + y) -1].image %>.jpg);"> 
-                  <% } else { %>
-                    >
-                  <% } %></td>
-              <% } %>
-            </tr>
+  <nav class="sidebar">
+    <center>
+      <ul class="nav flex-column">
+        <br><br><br><br><br><br><br>
+        <li class="nav-item">
+          <h4>Board Name: <%= board[0].name %></h4>
+        </li>
+        <li class="nav-item">
+          Thick: <%= board[0].thick %>
+        </li>
+        <li class="nav-item">
+          Length:<%= board[0].length %>
+        </li>
+        <li class="nav-item">
+          UserFk:<%= board[0].userFk %>
+        </li>
+        <br><br><br><br><br><br><br>
+        <hr>
+        <li>
+          Cells
+        </li>
+        <hr>
+      </ul>
+    </center>
+  </nav>
+  <center>
+    <%- include('../partials/header.html'); %>
+    <table id="board">
+      <br>
+      <% for (let y = 1; y <= board[0].thick; y++) { %>
+        <tr id="<%= y %>">
+          <% for (let x = 1; x <= board[0].length; x++) { %>
+            <td id="<%= x %>" 
+              <% if(cells && cells[((x-1) * board[0].length + y)-1] && cells[((x-1) * board[0].length + y)-1].image !== null){ %>
+                style="background-image: url(../cellsPictures/<%= cells[((x-1) * board[0].length + y) -1].image %>.jpg);"> 
+              <% } else { %>
+                >
+              <% } %></td>
           <% } %>
-        </table>
-      </center>
+        </tr>
+      <% } %>
+    </table>
+  </center>
 </body>
 </html>

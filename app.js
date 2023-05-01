@@ -4,19 +4,26 @@ const passport = require('passport');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const mysql = require('mysql');
-
+const { error } = require('console');
+const flash = require('connect-flash');
 
 let db = mysql.createConnection({
     host: "localhost",
-    user: "node",
-    password: "node",
+    user: "root",
     database: "mapster"
-  });
+});
 
-  db.connect(function(err) {
-    if (err) throw err;
-    console.log("Db connected!");
-  });
+try {
+    db.connect(function(err) {
+        if (err) {
+            console.error('Error al conectarse a la base de datos: ' + err.stack);
+            return;
+        }
+        console.log("Mapster Db connected!");
+    });
+} catch (error) {
+    console.error('Error al conectar con la base de datos: ' + error.stack);
+}
 
 const app = express();
 
@@ -25,6 +32,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({secret: 'mapster'}));
+app.use(flash());
 
 require('./src/config/passport.js')(app);
 
@@ -44,12 +52,16 @@ app.get('/boards',(req, res)=>{
     if (!req.user) {
         return res.redirect('/signin');
     }
-    const boards = db.query(
-        "SELECT * FROM board", function (err, results, fields) {
-        if (err) throw err;
-        console.log(results);
-        res.render('boards', {boards: results});
-    });
+    try {
+        const boards = db.query(
+            "SELECT * FROM board", function (err, results, fields) {
+            if (err) throw err;
+            console.log(results);
+            res.render('boards', {boards: results});
+        });
+    } catch (error) {
+        console.error('Ocurrió un error al ejecutar la consulta: ', error);
+    }
 });
 
 app.get('/boards/:id', (req, res) => {
@@ -63,17 +75,21 @@ app.get('/boards/:id', (req, res) => {
         "WHERE c.boardFk = ?;" 
     const id = req.params.id;
     let board, cells;
-    db.query("SELECT * FROM board WHERE id = ?", [id], function (err, boardResults, fields) {
-        if (err) throw err;
-        console.log(boardResults);
-        board = boardResults;
-        db.query(cst, [id], function (err, cellsResults, fields) {
+    try{
+        db.query("SELECT * FROM board WHERE id = ?", [id], function (err, boardResults, fields) {
             if (err) throw err;
-            console.log(cellsResults);
-            cells = cellsResults.map((cell) => Object.assign({}, cell));
-            res.render('board', {board, cells: cells});
+            console.log(boardResults);
+            board = boardResults;
+            db.query(cst, [id], function (err, cellsResults, fields) {
+                if (err) throw err;
+                console.log(cellsResults);
+                cells = cellsResults.map((cell) => Object.assign({}, cell));
+                res.render('board', {board, cells: cells});
+            });
         });
-    });
+    } catch (error) {
+        console.error('Ocurrió un error al ejecutar la consulta: ', error);
+    }
 });
 
 app.get('/signup',(req, res)=>{
@@ -99,12 +115,13 @@ app.post('/signup', (req, res) => {
 
 app.get('/signin', (req, res) => {
     console.log('signin');
-    res.render('signin');
+    res.render('signin', { message: req.flash('error') });
 });
   
 app.post('/signin', passport.authenticate('local', {
     successRedirect: '/boards',
     failureRedirect: '/signin',
+    failureFlash: true 
 }));
 
 app.listen(3000, ()=>{

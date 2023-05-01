@@ -1,35 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <title>Mapster</title>
-    <link rel="stylesheet" href="../css/style.css">
+    <%- include('../partials/head.html'); %>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-    <script>
-        $(document).ready(function(){
-            $("#signup").click(function(){
-                window.location.replace("http://localhost:3000/signup");
-            });
-        });
-    </script>
+    <script src="./scripts/script.js"></script>
 </head>
 <body>
     <%- include('../partials/header.html'); %>
-    <center>
-        <% boards.forEach((row) => { %>
-            <ul>
-                <li><h4><%= row.name %></h4></li>
-                <li>Anchura:<%= row.thick %></li>
-                <li>Altura:<%= row.length %></li>
-                <li>idUsuario<%= row.userFk %></li>
-                <a href="/boards/<%= row.id %>" class="button">Consultar</a>
-            </ul>
-        <% }); %>
-    </center>
-    <%- include('../partials/footer.html'); %>
+    <div class="container my-5">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <% boards.forEach((row) => { %>
+                <div class="col">
+                    <div class="card h-100" style="border-radius: 1rem; background-color:  var(--background); ">
+                        <img src="<%= row.urlImage %>" class="card-img-top" alt="...">
+                        <center>
+                            <div class="card-body" >
+                                <h5 class="card-title"><%= row.name %></h5>
+                                <hr>
+                                <p class="card-text">Size: <%= row.thick %> X <%= row.length %></p>
+                                <p style="text-align: left;"><%= row.description %></p>
+                                <a href="/boards/<%= row.id %>" class="btn btn" style="border-color:var(--highlight); color: var(--highlight)">View</a>
+                            </div>
+                        </center>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </div>
 </body>
 </html>

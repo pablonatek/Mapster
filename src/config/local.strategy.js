@@ -14,25 +14,27 @@ module.exports = function localStrategy() {
 
         let db = mysql.createConnection({
             host: "localhost",
-            user: "node",
-            password: "node",
+            user: "root",
             database: "mapster"
         });
         
         db.connect(function(err) {
             if (err) throw err;
             console.log("Db connected!");
-        });
+        }); 
 
-        try {
+        try { 
             db.query("SELECT * FROM user WHERE username = ?", [username], function (err, userResults, fields) {
                 if (err) throw err;
-                console.log(userResults);
-                console.log(userResults[0].password);
-                if(userResults && userResults[0].password === password) {
-                    done(null, userResults);
-                } else{
-                    done(null, false);
+                if (userResults.length === 0) {
+                    console.error('El usuario no se encuentra en la base de datos');
+                    return done(null, false, { message: 'Usuario o contraseña incorrectos' });
+                }
+                if (userResults[0].password === password) {
+                    return done(null, userResults);
+                } else {
+                    console.error('La contraseña es incorrecta');
+                    return done(null, false, { message: 'Usuario o contraseña incorrectos' });
                 }
             });
         } catch (error) {
