@@ -1,11 +1,63 @@
 $(document).ready(function(){
     // Obtener la tabla y las cells
     const board = document.getElementById('board');
-    const cells = board.getElementsByTagName('td');
 
     // Establecer el ancho y alto de la tabla
     const windowWidth = window.innerWidth;
     const windowHeight = window.innerHeight;
-    board.style.width = (Math.min(windowWidth, windowHeight) * 0.8) + 'px';
-    board.style.height = (Math.min(windowWidth, windowHeight) * 0.8) + 'px';
+    let size = Math.min(windowWidth, windowHeight) * 0.8;
+    board.style.width = (size) + 'px';
+    board.style.height = (size) + 'px';
+
+    // Obtener todas las imágenes y casillas de la tabla
+    const images = document.querySelectorAll(".cellType");
+    const cells = document.querySelectorAll(".cell");
+
+    // Agregar event listener a cada imagen
+    images.forEach((image) => {
+        image.addEventListener("dragstart", dragStart);
+    });
+
+    // Agregar event listener a cada casilla de la tabla
+    cells.forEach((cell) => {
+        cell.addEventListener("dragover", dragOver);
+        cell.addEventListener("dragenter", dragEnter);
+        cell.addEventListener("dragleave", dragLeave);
+        cell.addEventListener("drop", dragDrop);
+    });
+
+    function dragStart(event) {
+        // Obtener el id de la imagen que se está arrastrando
+        const id = event.target.id;
+        
+        // Establecer la información del arrastre (en este caso, solo el id de la imagen)
+        event.dataTransfer.setData("text/plain", id);
+    }
+      
+    function dragOver(event) {
+        // Prevenir el comportamiento por defecto del navegador (no permitir soltar)
+        event.preventDefault();
+    }
+      
+    function dragEnter(event) {
+        // Agregar clase "drag-enter" a la casilla
+        event.target.classList.add("drag-enter");
+    }
+      
+     function dragLeave(event) {
+        // Remover clase "drag-enter" de la casilla
+        event.target.classList.remove("drag-enter");
+    }
+      
+    function dragDrop(event) {
+        // Obtener el id de la imagen que se está arrastrando
+        const id = event.dataTransfer.getData("text");
+    
+        // Obtener la imagen y agregarla a la casilla
+        const image = document.getElementById(id);
+        event.target.appendChild(image);
+    
+        // Remover clase "drag-enter" de la casilla
+        event.target.classList.remove("drag-enter");
+    }      
 });

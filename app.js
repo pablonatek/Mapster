@@ -74,18 +74,24 @@ app.get('/boards/:id', (req, res) => {
             "LEFT JOIN cellType ct ON ct.id = c.typeFk " +
         "WHERE c.boardFk = ?;" 
     const id = req.params.id;
-    let board, cells;
+    let board, cells, cellTypes;
     try{
         db.query("SELECT * FROM board WHERE id = ?", [id], function (err, boardResults, fields) {
             if (err) throw err;
             console.log(boardResults);
             board = boardResults;
-            db.query(cst, [id], function (err, cellsResults, fields) {
+            db.query("SELECT * FROM celltype", function (err, cellTypeResults, fields) {
                 if (err) throw err;
-                console.log(cellsResults);
-                cells = cellsResults.map((cell) => Object.assign({}, cell));
-                res.render('board', {board, cells: cells});
+                cellTypes = cellTypeResults;
+                console.log(cellTypes);
+                db.query(cst, [id], function (err, cellsResults, fields) {
+                    if (err) throw err;
+                    console.log(cellsResults);
+                    cells = cellsResults.map((cell) => Object.assign({}, cell));
+                    res.render('board', {board, cells: cells, cellTypes: cellTypes});
+                });
             });
+            
         });
     } catch (error) {
         console.error('Ocurrió un error al ejecutar la consulta: ', error);

@@ -22,7 +22,9 @@
   a {
     color: var(--highlight);
   }
-  
+  td{
+    object-fit: scale-down;
+  }
   .sidebar {
     position: fixed;
     font-weight: 500;
