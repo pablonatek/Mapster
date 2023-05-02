@@ -14,7 +14,8 @@ module.exports = function localStrategy() {
 
         let db = mysql.createConnection({
             host: "localhost",
-            user: "root",
+            user: "node",
+            password: "node",
             database: "mapster"
         });
         

@@ -52,11 +52,31 @@ $(document).ready(function(){
     function dragDrop(event) {
         // Obtener el id de la imagen que se está arrastrando
         const id = event.dataTransfer.getData("text");
-    
+
         // Obtener la imagen y agregarla a la casilla
         const image = document.getElementById(id);
-        event.target.appendChild(image);
-    
+        event.target.style.backgroundImage = `url(${image.src})`;
+        event.target.style.backgroundSize = "cover";
+
+        // tranformamos el nombre de la imgen y el id de la celda en JSON
+        let data = {
+            imageName: id
+        };
+        let targetObj = JSON.parse(event.target.id);
+        data = Object.assign({}, data, targetObj);
+        
+        // realizamos un post al back para actualizar las casillas
+        fetch('/boards/:id', {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+          .then(response => response.json())
+          .then(data => console.log(data))
+          .catch(error => console.error(error));
+
         // Remover clase "drag-enter" de la casilla
         event.target.classList.remove("drag-enter");
     }      

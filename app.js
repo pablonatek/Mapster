@@ -6,10 +6,12 @@ const session = require('express-session');
 const mysql = require('mysql');
 const { error } = require('console');
 const flash = require('connect-flash');
+const { isUndefined } = require('util');
 
 let db = mysql.createConnection({
     host: "localhost",
-    user: "root",
+    user: "node",
+    password: "node",
     database: "mapster"
 });
 
@@ -88,10 +90,37 @@ app.get('/boards/:id', (req, res) => {
                     if (err) throw err;
                     console.log(cellsResults);
                     cells = cellsResults.map((cell) => Object.assign({}, cell));
-                    res.render('board', {board, cells: cells, cellTypes: cellTypes});
+                    res.render('board', {board: board, cells: cells, cellTypes: cellTypes});
                 });
             });
             
+        });
+    } catch (error) {
+        console.error('Ocurrió un error al ejecutar la consulta: ', error);
+    }
+});
+
+app.post('/boards/:id', (req, res) => {
+    // creando el usario
+    console.log(req.body);
+    console.log(req.body.imageName);
+    try{
+        db.query("SELECT id FROM celltype WHERE image =  ?",[req.body.imageName], function (err, imageResults, fields) {
+            if (err) throw err;
+            const cst = "UPDATE cell SET typeFk = ? WHERE x = ? AND y = ? AND boardFk = ?";
+            const cstNull = "UPDATE cell SET typeFk = NULL WHERE x = ? AND y = ? AND boardFk = ?";
+            if (req.body.imageName === "null") {
+                console.log('borrar');
+                db.query(cstNull, [req.body.x,req.body.y,req.body.board], function (err, cellsResults, fields) {
+                    if (err) throw err;
+                    console.log(cellsResults);
+                });
+            }else{
+                db.query(cst, [imageResults[0].id, req.body.x, req.body.y, req.body.board], function (err, cellsResults, fields) {
+                    if (err) throw err;
+                    console.log(cellsResults);
+                });
+            }
         });
     } catch (error) {
         console.error('Ocurrió un error al ejecutar la consulta: ', error);

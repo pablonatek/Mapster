@@ -38,19 +38,28 @@
           <h4>Cell Types</h4>
         </li>
         <hr>
-        <% cellTypes.forEach((row) => { %>
-          <table>
+        <table>
+          <% cellTypes.forEach((row) => { %>
             <tr>
               <td>
-                <img src="../cellsPictures/<%= row.image %>.jpg" draggable="true" id="<%= row.description %>" class="cellType"
+                <img src="../cellsPictures/<%= row.image %>.jpg" draggable="true" id="<%= row.image %>" class="cellType"
                   style = "width: 100%; height: 50px; object-fit: scale-down;">
               </td>
               <td>
                 <p><%= row.description %></p>
               </td>
             </tr>
-          </table>
-        <% }); %>
+          <% }); %>
+          <tr>
+            <td>
+              <img src="../cellsPictures/borrar.png" draggable="true" id="null" class="cellType"
+                style = "width: 100%; height: 50px; object-fit: scale-down;">
+            </td>
+            <td>
+              <p>Delette</p>
+            </td>
+          </tr>
+        </table>
       </ul>
     </center>
   </nav>
@@ -61,7 +70,7 @@
       <% for (let y = 1; y <= board[0].thick; y++) { %>
         <tr id="<%= y %>">
           <% for (let x = 1; x <= board[0].length; x++) { %>
-            <td id="<%= x %>" class="cell"
+            <td id="<%= JSON.stringify({board:board[0].id,x:x,y:y}) %>" class="cell"
               <% if(cells && cells[((x-1) * board[0].length + y)-1] && cells[((x-1) * board[0].length + y)-1].image !== null){ %>
                 style="background-image: url(../cellsPictures/<%= cells[((x-1) * board[0].length + y) -1].image %>.jpg); background-size: contain;"> 
               <% } else { %>
