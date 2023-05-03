@@ -2,6 +2,11 @@ const passport = require('passport');
 const { Strategy } = require('passport-local');
 const mysql = require('mysql');
 
+const db_host = process.env.DB_HOST || "localhost";
+const db_user = process.env.DB_USER || "node";
+const db_password = process.env.DB_PASSWORD || "node";
+const db_name = process.env.DB_NAME || "mapster";
+
 module.exports = function localStrategy() {
     passport.use(new Strategy({
         usernameField: 'username',
@@ -13,10 +18,10 @@ module.exports = function localStrategy() {
         done(null, user);*/
 
         let db = mysql.createConnection({
-            host: "localhost",
-            user: "node",
-            password: "node",
-            database: "mapster"
+            host: db_host,
+            user: db_user,
+            password: db_password ,
+            database: db_name
         });
         
         db.connect(function(err) {
