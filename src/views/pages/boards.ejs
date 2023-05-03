@@ -9,6 +9,17 @@
     <%- include('../partials/header.html'); %>
     <div class="container my-5">
         <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col">
+                <div class="card h-100" style="border-radius: 1rem; background-color:  var(--background); ">
+                    <center>
+                        <div class="card-body" >
+                            <h5 class="card-title">Create a new Board</h5>
+                            <hr>
+                            <a href="/new" class="btn btn" style="border-color:var(--highlight); color: var(--highlight)">Create</a>
+                        </div>
+                    </center>
+                </div>
+            </div>
             <% boards.forEach((row) => { %>
                 <div class="col">
                     <div class="card h-100" style="border-radius: 1rem; background-color:  var(--background); ">

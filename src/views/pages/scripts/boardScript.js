@@ -16,7 +16,7 @@ $(document).ready(function(){
     // Agregar event listener a cada imagen
     images.forEach((image) => {
         image.addEventListener("dragstart", dragStart);
-    });
+    }); 
 
     // Agregar event listener a cada casilla de la tabla
     cells.forEach((cell) => {

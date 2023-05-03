@@ -41,22 +41,64 @@ require('./src/config/passport.js')(app);
 app.set('views', './src/views/pages');
 app.set('view engine', 'ejs');
 
+app.listen(3000, ()=>{
+    console.log('!Mapster Start!');
+});
+
 app.get('/',(req, res)=>{
     res.render('index');
 });
 
-app.get('/login',(req, res)=>{
-    res.render('login');
+app.get('/signup',(req, res)=>{
+    console.log('signup');
+    res.render('signup');
 });
+
+app.post('/signup', (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+
+    db.query("SELECT * FROM user WHERE username = ?", [username], (err, results, fields) => {
+        if (err) throw err;
+
+        if (results.length > 0) {
+            // El usuario ya existe, enviar mensaje de error
+            res.render('signup', { message: 'Username already taken' });
+        } else {
+            // El usuario no existe, insertar en la base de datos
+            db.query("INSERT INTO user SET username = ?, password = ?", [username, password], (err, userResults, fields) => {
+                if (err) throw err;
+
+                // Iniciar sesión con el nuevo usuario y redirigir a la página de tableros
+                req.logIn(userResults, () => {
+                    res.redirect('/boards');
+                });
+            });
+        }
+    });
+});
+
+app.get('/signin', (req, res) => {
+    console.log('signin');
+    res.render('signin', { message: req.flash('error') });
+});
+  
+app.post('/signin', passport.authenticate('local', {
+    successRedirect: '/boards',
+    failureRedirect: '/signin',
+    failureFlash: true 
+}));
 
 app.get('/boards',(req, res)=>{
     console.log('boards');
-    if (!req.user) {
+    console.log(req.user);
+    if (!req.user || !req.user[0]) {
         return res.redirect('/signin');
     }
+    console.log(req.user[0].id);
     try {
         const boards = db.query(
-            "SELECT * FROM board", function (err, results, fields) {
+            "SELECT * FROM board WHERE userFk = ?", [req.user[0].id], function (err, results, fields) {
             if (err) throw err;
             console.log(results);
             res.render('boards', {boards: results});
@@ -100,8 +142,37 @@ app.get('/boards/:id', (req, res) => {
     }
 });
 
-app.post('/boards/:id', (req, res) => {
-    // creando el usario
+app.get('/new',(req, res)=>{
+    res.render('newBoard');
+    console.log(req.user);
+});
+
+app.post('/new',(req, res)=>{
+    //comprobamos que el usario este logeado
+    if (!req.user) {
+        req.flash('error', 'Debes iniciar sesión para crear un nuevo tablero');
+        //lo enviamos a la pagina de signin
+        return res.redirect('/signin');
+    } else { 
+        console.log(req.user[0].id, req.body.boardName, req.body.size, req.body.size, req.body.description);
+        try {
+            const cst = "INSERT INTO mapster.board " +
+                    "(userFk, name, thick, `length`, description, urlImage) " +
+                    "VALUES(?, ?, ?, ?, ?, ?);"
+            db.query(cst,[req.user[0].id, req.body.boardName, req.body.size, req.body.size, req.body.description, req.body.urlImage], function (err, newBoardResults, fields) {
+                if (err) throw err;
+                console.log(newBoardResults);
+                res.redirect('/boards');
+            });
+        } catch (error) {
+            console.error('Ocurrió un error al ejecutar la consulta: ', error);
+            res.redirect('/boards');
+        }
+    }
+});
+
+
+app.post('/boards/:id', (req, res) => { 
     console.log(req.body);
     console.log(req.body.imageName);
     try{
@@ -125,40 +196,4 @@ app.post('/boards/:id', (req, res) => {
     } catch (error) {
         console.error('Ocurrió un error al ejecutar la consulta: ', error);
     }
-});
-
-app.get('/signup',(req, res)=>{
-    console.log('signup');
-    res.render('signup');
-});
-
-app.post('/signup', (req, res) => {
-    // creando el usario
-    const username = req.body.username;
-    const password = req.body.password;
-    const results =  db.query("INSERT INTO user SET username = ?, password = ?", 
-        [username, password], 
-        function (err, userResults, fields){
-            if (err) throw err;
-            // log in el usuario
-            req.logIn(userResults, () => {
-                res.redirect('/boards')
-            });
-        }
-    );
-});
-
-app.get('/signin', (req, res) => {
-    console.log('signin');
-    res.render('signin', { message: req.flash('error') });
-});
-  
-app.post('/signin', passport.authenticate('local', {
-    successRedirect: '/boards',
-    failureRedirect: '/signin',
-    failureFlash: true 
-}));
-
-app.listen(3000, ()=>{
-    console.log('!Mapster Start!');
 });
