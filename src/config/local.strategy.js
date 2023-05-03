@@ -6,6 +6,7 @@ const db_host = process.env.DB_HOST || "localhost";
 const db_user = process.env.DB_USER || "node";
 const db_password = process.env.DB_PASSWORD || "node";
 const db_name = process.env.DB_NAME || "mapster";
+const db_port = process.env.DB_PORT || 3306;
 
 module.exports = function localStrategy() {
     passport.use(new Strategy({
@@ -21,6 +22,7 @@ module.exports = function localStrategy() {
             host: db_host,
             user: db_user,
             password: db_password ,
+            port: db_port,
             database: db_name
         });
         
