@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "test": "nodemon app.js",
     "start": "node app.js"
   },
   "dependencies": {
