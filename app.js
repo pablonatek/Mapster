@@ -8,7 +8,7 @@ const { error } = require('console');
 const flash = require('connect-flash');
 const { isUndefined } = require('util');
 
-const port =  process.env.DB_PORT || 3000;
+const port = process.env.PORT || 3000;
 const db_host = process.env.DB_HOST || "localhost";
 const db_user = process.env.DB_USER || "node";
 const db_password = process.env.DB_PASSWORD || "node";
