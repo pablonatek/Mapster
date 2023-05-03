@@ -8,11 +8,17 @@ const { error } = require('console');
 const flash = require('connect-flash');
 const { isUndefined } = require('util');
 
+const port =  process.env.PORT || 3000;
+const db_host = process.env.DB_HOST || "localhost";
+const db_user = process.env.DB_USER || "node";
+const db_password = process.env.DB_PASSWORD || "node";
+const db_name = process.env.DB_NAME || "mapster";
+
 let db = mysql.createConnection({
-    host: "localhost",
-    user: "node",
-    password: "node",
-    database: "mapster"
+    host: db_host,
+    user: db_user,
+    password: db_password,
+    database: db_name
 });
 
 try {
@@ -41,7 +47,7 @@ require('./src/config/passport.js')(app);
 app.set('views', './src/views/pages');
 app.set('view engine', 'ejs');
 
-app.listen(3000, ()=>{
+app.listen(port, ()=>{
     console.log('!Mapster Start!');
 });
 
