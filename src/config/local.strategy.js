@@ -1,6 +1,6 @@
 const passport = require('passport');
 const { Strategy } = require('passport-local');
-const mysql = require('mysql');
+const mysql = require('mysql2');
 
 const db_host = process.env.DB_HOST || "localhost";
 const db_user = process.env.DB_USER || "node";
