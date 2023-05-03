@@ -118,7 +118,7 @@ app.get('/boards/:id', (req, res) => {
     const cst = 
         "SELECT c.id, c.x, c.y, c.boardFk, ct.image " +
         "FROM cell c " +
-            "LEFT JOIN cellType ct ON ct.id = c.typeFk " +
+            "LEFT JOIN celltype ct ON ct.id = c.typeFk " +
         "WHERE c.boardFk = ?;" 
     const id = req.params.id;
     let board, cells, cellTypes;
