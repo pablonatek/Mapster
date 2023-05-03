@@ -40,7 +40,10 @@ app.use(express.static(path.join(__dirname, '/src/views/pages')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(session({secret: 'mapster'}));
+app.use(session({secret: 'mapster',
+    resave: false,
+    saveUninitialized: false
+}));
 app.use(flash());
 
 require('./src/config/passport.js')(app);
