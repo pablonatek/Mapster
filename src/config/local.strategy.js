@@ -14,9 +14,6 @@ module.exports = function localStrategy() {
         passwordField: 'password'
     },
     (username, password, done) => {
-        /*const user = {username, password, 'name': 'Ricardo' };
-        console.log('User log');
-        done(null, user);*/
 
         let db = mysql.createConnection({
             host: db_host,
@@ -28,7 +25,6 @@ module.exports = function localStrategy() {
         
         db.connect(function(err) {
             if (err) throw err;
-            console.log("Db connected!");
         }); 
 
         try { 

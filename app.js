@@ -29,7 +29,6 @@ try {
             console.error('Error al conectarse a la base de datos: ' + err.stack);
             return;
         }
-        console.log("Mapster Db connected!");
     });
 } catch (error) {
     console.error('Error al conectar con la base de datos: ' + error.stack);
@@ -50,7 +49,6 @@ app.set('views', './src/views/pages');
 app.set('view engine', 'ejs');
 
 app.listen(port, ()=>{
-    console.log('!Mapster Start!');
 });
 
 app.get('/',(req, res)=>{
@@ -58,7 +56,6 @@ app.get('/',(req, res)=>{
 });
 
 app.get('/signup',(req, res)=>{
-    console.log('signup');
     res.render('signup');
 });
 
@@ -87,7 +84,6 @@ app.post('/signup', (req, res) => {
 });
 
 app.get('/signin', (req, res) => {
-    console.log('signin');
     res.render('signin', { message: req.flash('error') });
 });
   
@@ -98,17 +94,13 @@ app.post('/signin', passport.authenticate('local', {
 }));
 
 app.get('/boards',(req, res)=>{
-    console.log('boards');
-    console.log(req.user);
     if (!req.user || !req.user[0]) {
         return res.redirect('/signin');
     }
-    console.log(req.user[0].id);
     try {
         const boards = db.query(
             "SELECT * FROM board WHERE userFk = ?", [req.user[0].id], function (err, results, fields) {
             if (err) throw err;
-            console.log(results);
             res.render('boards', {boards: results});
         });
     } catch (error) {
@@ -130,15 +122,12 @@ app.get('/boards/:id', (req, res) => {
     try{
         db.query("SELECT * FROM board WHERE id = ?", [id], function (err, boardResults, fields) {
             if (err) throw err;
-            console.log(boardResults);
             board = boardResults;
             db.query("SELECT * FROM celltype", function (err, cellTypeResults, fields) {
                 if (err) throw err;
                 cellTypes = cellTypeResults;
-                console.log(cellTypes);
                 db.query(cst, [id], function (err, cellsResults, fields) {
                     if (err) throw err;
-                    console.log(cellsResults);
                     cells = cellsResults.map((cell) => Object.assign({}, cell));
                     res.render('board', {board: board, cells: cells, cellTypes: cellTypes});
                 });
@@ -152,7 +141,6 @@ app.get('/boards/:id', (req, res) => {
 
 app.get('/new',(req, res)=>{
     res.render('newBoard');
-    console.log(req.user);
 });
 
 app.post('/new',(req, res)=>{
@@ -161,15 +149,13 @@ app.post('/new',(req, res)=>{
         req.flash('error', 'Debes iniciar sesión para crear un nuevo tablero');
         //lo enviamos a la pagina de signin
         return res.redirect('/signin');
-    } else { 
-        console.log(req.user[0].id, req.body.boardName, req.body.size, req.body.size, req.body.description);
+    } else {
         try {
             const cst = "INSERT INTO mapster.board " +
                     "(userFk, name, thick, `length`, description, urlImage) " +
                     "VALUES(?, ?, ?, ?, ?, ?);"
             db.query(cst,[req.user[0].id, req.body.boardName, req.body.size, req.body.size, req.body.description, req.body.urlImage], function (err, newBoardResults, fields) {
                 if (err) throw err;
-                console.log(newBoardResults);
                 res.redirect('/boards');
             });
         } catch (error) {
@@ -180,24 +166,19 @@ app.post('/new',(req, res)=>{
 });
 
 
-app.post('/boards/:id', (req, res) => { 
-    console.log(req.body);
-    console.log(req.body.imageName);
+app.post('/boards/:id', (req, res) => {
     try{
         db.query("SELECT id FROM celltype WHERE image =  ?",[req.body.imageName], function (err, imageResults, fields) {
             if (err) throw err;
             const cst = "UPDATE cell SET typeFk = ? WHERE x = ? AND y = ? AND boardFk = ?";
             const cstNull = "UPDATE cell SET typeFk = NULL WHERE x = ? AND y = ? AND boardFk = ?";
             if (req.body.imageName === "null") {
-                console.log('borrar');
                 db.query(cstNull, [req.body.x,req.body.y,req.body.board], function (err, cellsResults, fields) {
                     if (err) throw err;
-                    console.log(cellsResults);
                 });
             }else{
                 db.query(cst, [imageResults[0].id, req.body.x, req.body.y, req.body.board], function (err, cellsResults, fields) {
                     if (err) throw err;
-                    console.log(cellsResults);
                 });
             }
         });
