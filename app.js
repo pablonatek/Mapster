@@ -154,7 +154,7 @@ app.post('/new',(req, res)=>{
         return res.redirect('/signin');
     } else {
         try {
-            const cst = "INSERT INTO mapster.board " +
+            const cst = "INSERT INTO board " +
                     "(userFk, name, thick, `length`, description, urlImage) " +
                     "VALUES(?, ?, ?, ?, ?, ?);"
             db.query(cst,[req.user[0].id, req.body.boardName, req.body.size, req.body.size, req.body.description, req.body.urlImage], function (err, newBoardResults, fields) {
