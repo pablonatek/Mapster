@@ -17,9 +17,9 @@
     </style>
 </head>
 <body>
-  <nav class="sidebar">
+  <nav class="sidebar" style="height: 100%; overflow-y: scroll;">
     <center>
-      <ul class="nav flex-column">
+      <ul class="nav flex-column" >
         <br><br><br><br><br><br><br>
         <li class="nav-item">
           <h4>Board Name: <%= board[0].name %></h4>
@@ -64,7 +64,7 @@
       </ul>
     </center>
   </nav>
-  <center>
+  <center> 
     <%- include('../partials/header.html'); %>
     <table id="board">
       <br>
