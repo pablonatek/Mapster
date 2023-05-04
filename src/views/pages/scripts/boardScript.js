@@ -79,5 +79,6 @@ $(document).ready(function(){
 
         // Remover clase "drag-enter" de la casilla
         event.target.classList.remove("drag-enter");
-    }      
+    }
+    
 });

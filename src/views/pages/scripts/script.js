@@ -1,10 +1,10 @@
 $(document).ready(function(){
     $("#signup").click(function(){
-        window.location.replace("http://localhost:3000/signup");
+        window.location.replace("https://mapster-production.up.railway.app/signup");
     });
 
     $("#navImg").click(function(){
-        window.location.replace("http://localhost:3000");
+        window.location.replace("https://mapster-production.up.railway.app");
     });
 
     var message = $('#prompt').text().trim();
