@@ -7,9 +7,9 @@
   
     npm i
     
-  Instancia un servicio mysql y ejecuta el archivo.
+  Instancia un servicio mysql y ejecuta el archivo .sql.
   
-    recomendado docker
+    Recomendado utilizar xampp
     
   Inicializa el servidor node.js
   
