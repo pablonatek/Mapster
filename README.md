@@ -1,7 +1,7 @@
 ## Mapster
   Descarga el proyecto en tu repostirorio local /n
   
-    git clone url
+    git clone <url>
     
   Installa los modulos necsarios para el correcto funcionamiento de la appa
   
