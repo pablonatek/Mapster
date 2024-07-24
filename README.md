@@ -3,7 +3,7 @@
   
     git clone <url>
     
-  Installa los modulos necsarios para el correcto funcionamiento de la appa
+  Installa los modulos necsarios para el correcto funcionamiento de la app
   
     npm i
     
