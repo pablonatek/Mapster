@@ -1,5 +1,5 @@
 ## Mapster
-  Descarga el proyecto en tu repostirorio local /n
+  Descarga el proyecto en tu repostirorio local
   
     git clone <url>
     
